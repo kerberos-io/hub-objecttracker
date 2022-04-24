@@ -92,7 +92,6 @@ Or if you want to deploy into Kubernetes you can use the `hub-ml.yaml` file and 
 
 The following variables can be used, and should be aligned with your Kafka broker settings and Kerberos Vault account.
 
-|-----------------------------|--------------------------|---------------------------------------------------------------------------------|
 | Name                        | Example                  | Explanation                                                                     |
 | --------------------------- | ------------------------ | ------------------------------------------------------------------------------- |
 | QUEUE_SYSTEM                | "KAFKA"                  | Which Queue system is used "KAFKA" or "SQS".                                    |
