@@ -1,6 +1,6 @@
 # Kerberos Vault and Kerberos Hub with Machine learning 
 
-This is an example repository which shows the inference of a machine learning model (YOLOv3) by developing a Kerberos Vault or Kerberos Hub integration. The source code in this repository receives events from Kerberos Vault or the Kerberos Hub pipeline, through a Kafka integration, and downloads and runs inference on recordings stored in Kerberos Vault using the existing and open source YOLOv3 ML model. This repository contains an example `.yaml` file to illustrate how to run the project works in your Kubernetes cluster [using the NVIDIA operator](https://github.com/kerberos-io/nvidia-gpu-kubernetes).
+This is an example repository which shows the inference of a machine learning model (YOLOv3) by developing a Kerberos Vault or Kerberos Hub integration. The repository receives events from Kerberos Vault or the Kerberos Hub pipeline, through a Kafka or Kerberos Hub integration, and downloads, runs an interference on  therecordings stored in Kerberos Vault using the existing and open source YOLOv3 ML model. This repository contains an example `hub-ml.yaml` file to illustrate how to run the project works in your Kubernetes cluster [using the NVIDIA operator](https://github.com/kerberos-io/nvidia-gpu-kubernetes).
 
 ![NVIDIA operator Kerberos Vault](https://user-images.githubusercontent.com/1546779/132137679-33fc02df-085f-47cf-8587-301bd3448e63.png)
 
