@@ -88,7 +88,7 @@ Or with the Kerberos Hub pipeline.
 
 Or if you want to deploy into Kubernetes you can use the `hub-ml.yaml` file and specify the environment variables inside the environments section.
 
-    kubectl apply -f kubernetes.yaml
+    kubectl apply -f hub-ml.yaml -n kerberos-hub
 
 The following variables can be used, and should be aligned with your Kafka broker settings and Kerberos Vault account.
 
