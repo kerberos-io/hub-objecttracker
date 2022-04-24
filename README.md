@@ -1,16 +1,16 @@
-# Kerberos Vault with Machine learning 
+# Kerberos Vault and Kerberos Hub with Machine learning 
 
-This is an example repository which shows the inference of a machine learning model (YOLOv3) by developing a Kerberos Vault integration. The source code in this repository receives events from Kerberos Vault, through a Kafka integration, and downloads and runs inference on recordings stored in Kerberos Vault using the existing and open source YOLOv3 ML model. This repository contains examples to illustrate how the project works, how it is bundled as a Docker container and how it is deployed inside a Kubernetes cluster [using the NVIDIA operator](https://github.com/kerberos-io/nvidia-gpu-kubernetes).
+This is an example repository which shows the inference of a machine learning model (YOLOv3) by developing a Kerberos Vault or Kerberos Hub integration. The source code in this repository receives events from Kerberos Vault or the Kerberos Hub pipeline, through a Kafka integration, and downloads and runs inference on recordings stored in Kerberos Vault using the existing and open source YOLOv3 ML model. This repository contains an example `.yaml` file to illustrate how to run the project works in your Kubernetes cluster [using the NVIDIA operator](https://github.com/kerberos-io/nvidia-gpu-kubernetes).
 
 ![NVIDIA operator Kerberos Vault](https://user-images.githubusercontent.com/1546779/132137679-33fc02df-085f-47cf-8587-301bd3448e63.png)
 
 ## Kerberos Vault
 
-[Kerberos Vault](https://doc.kerberos.io/vault/first-things-first/) allows you to persist your recordings in the storage providers you want. These storage providers could live in the cloud such as AWS S3, GCP storage and Azure Blob store, or can be located on premise - at the edge - such as Minio. After storing one or more recordings, integrations can be enabled in Kerberos Vault. You can generate real-time messages in Kafka, SQS, or other messages queues to start the execution of custom code, or machine learning models (as explained in the next paragraph).
+[Kerberos Vault](https://doc.kerberos.io/vault/first-things-first/) allows you to persist your recordings in the storage providers you want. These storage providers could live in the cloud such as AWS S3, GCP storage and Azure Blob store, or can be located on premise - at the edge - such as Minio and Ceph. After storing one or more recordings, integrations can be enabled in Kerberos Vault. You can generate real-time messages in Kafka, SQS, or other messages queues to start the execution of custom code, or machine learning models (as explained in the next paragraph).
 
 ### Extend with Machine learning
 
-The purpose of the Kerberos Enterprise Suite, and more specifically Kerberos Vault, is to allow businesses to create custom integrations to support their unique business processes by bringing their own code and programming languages.
+The purpose of the Kerberos Enterprise Suite, and more specifically Kerberos Vault and Kerberos Hub, is to allow businesses to create custom integrations to support their unique business processes by bringing their own code and programming languages.
 
 An example of a business process could be the execution of a machine learning model or any other computer vision related algorithm to perform a specific task. Once properly done, the application could take the appropriate actions and integrations: sending an alert, saving a DB entry, calling an API, etc.
 
@@ -20,39 +20,17 @@ As shown above, Kerberos Agents will take care of the scaling and stability of y
 
 Once stored, Kerberos Vault can execute multiple integrations such as Kafka messaging. As soon as a message hits the message broker (e.g. Kafka), the process is totally your. Hence, what you will learn next is a practical example of how that integration with custom code looks like. 
 
-## Hardware: CPUs and/or GPUs
+## Kerberos Hub
 
-This project can run on both CPU's and/or GPU's. By using the correct `docker/Dockerfile` or `docker/Dockerfile-gpu` you will create a compatible Docker image for your CPU or GPU. As you might expect, the only difference will be execution time; you will experience much higher performance with a GPU over a CPU.
+As part of the Kerberos Hub pipeline, a specific queue is created for machine learning and object detection. Once you have Kerberos Vault integrated with Kerberos Hub, recordings will flow through the Kerberos Hub pipeline, and eventually land in the classification queue.
 
-### CPU
-
-To run the project on a CPU you will only need to have Docker installed on your machine. When running the `./run-cpu.sh` command, it will create, prepare and run the Docker image for running on your host machine using your CPU.
-
-### GPU 
-
-The same can be done as described before, but then using a GPU. As you might expect a bit more has to be done to make this work. Before starting, make sure you have the correct NVIDIA drivers installed on your host machine. Once done install `nvidia-docker` on top of your docker installation. More information about the Docker installation can be found at the official [at the official NVIDIA docker documentation](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#setting-up-docker). Likewise, running `./run-gpu.sh` will create another Docker image but compatible for a GPU.
-
-## Deployments
-
-You can run/deploy this project on your local working station, as a Docker container or inside your Kubernetes cluster. This will make it interesting for distributing your machine learning model, and afterwards scale it amongst your GPUs and nodes.
-
-### Docker
-
-When running as a Docker container make sure you have read the previous mentioned "Hardware: CPU's and/or GPU's" section. There is not much else to do rather than running the Docker container and providing the relevant environment variables; read more in The Project.
+To process those recordings, the `kerberos/hub-ml` will need to be deployed. As soon as this is setup, all recordings will be processed by the service, and the outcome (metadata) will be stored as metadate in Kerberos Hub.
 
 ### Kubernetes
-
-After preparing your Docker containers and confirming it is running properly, it is time to scale it with Kubernetes. The same Docker container can be scheduled into a Kubernetes cluster, and can benefit from your CPU or GPU enabled nodes.
 
 To run on Kubernetes, a helpful tool is the NVIDIA Kubernetes operator. The operator will help you to schedule your GPU workloads (as we will create in a couple of minutes) on the appropriate Kubernetes nodes (that have a GPU attached). Next to that the operator will load-balance and allocate a random NVIDIA GPU that's available to run your workload.
 
 So to conclude: the only thing you need to do in order to scale is to add more GPUs and deploy more workloads. Isn't that nice? :)
- 
-## The Project
-
-This project contains a working example that integrates with Kerberos Vault through a Kafka integration.  The source code lives in the `detect.py` file, and from a high level establishes a connection with a Kafka broker and Kerberos Vault. Next to that it will also load the required libraries for running the `YOLOv3` model. The following diagram explains what is happening and which systems are targeted.
-
-![yolov3-integration-kerberos-vault](images/yolov3-integration-kerberos-vault-example.png)
 
 ### Prerequisites
 
@@ -88,7 +66,7 @@ Environment variables can be passed into your `docker run` command.
     -e FORWARDING_METADATA="false" \
     -e FORWARDING_OBJECT_THRESHOLD="1" \
     -e REMOVE_AFTER_PROCESSED="false" \
-    vault-ml
+    kerberos/vault-ml:nvidia
 
 Or with the Kerberos Hub pipeline.
 
@@ -106,9 +84,9 @@ Or with the Kerberos Hub pipeline.
     -e FORWARDING_METADATA="false" \
     -e FORWARDING_OBJECT_THRESHOLD="1" \
     -e REMOVE_AFTER_PROCESSED="false" \
-    hub-ml
+    kerberos/hub-ml:nvidia
 
-Or if you want to deploy into Kubernetes you can use the `kubernetes.yaml` file and specify the environment variables inside the environments section.
+Or if you want to deploy into Kubernetes you can use the `hub-ml.yaml` file and specify the environment variables inside the environments section.
 
     kubectl apply -f kubernetes.yaml
 
