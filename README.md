@@ -42,7 +42,7 @@ As shown in the above architecture, this project has a couple of prerequisites.
 4. have a Kafka installation, and [connected through an integration](https://doc.kerberos.io/vault/get-started/#queues) in Kerberos Vault
 5. and if running on GPUs have the required NVIDIA drivers and operator (when on Kubernetes) installed.
 
-### Environment variables   
+### Installation and Environment variables   
 
 Inside the project we are making extensive use of environment variables. Those environment variables will inject the appropriate settings into the source code, and will make sure the project connects to your Kafka broker and Kerberos Vault installation.
 
