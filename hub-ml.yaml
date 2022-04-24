@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kerberoshub-ml
+  labels:
+    app: kerberoshub-ml
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kerberoshub-ml
+  template:
+    metadata:
+      labels:
+        app: kerberoshub-ml
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: kerberoshub-ml
+          image: kerberos/hub-ml:nvidia # or CPU -> kerberos/hub-ml:amd64
+          resources:
+            limits:
+              nvidia.com/gpu: 1 # requesting a single GPU
+          env:
+            - name: QUEUE_SYSTEM
+              value: "KAFKA"
+            - name: QUEUE_NAME
+              value: "kcloud-classify-queue.fifo" # This is the topic of kafka we will read messages from.
+            - name: QUEUE_TARGET
+              value: "kcloud-analysis-queue" # Once we processed the recording with ML, we will send results/metadata to a target topic of Kafka.
+            - name: KAFKA_BROKER
+              value: "kafka1.kerberos.xxx:9094,kafka2.kerberos.xxx:9094"
+            - name: KAFKA_GROUP
+              value: "mygroup"
+            - name: KAFKA_USERNAME
+              value: "xxx"
+            - name: KAFKA_PASSWORD
+              value: "xxx"
+            - name: KAFKA_MECHANISM
+              value: "PLAIN"
+            - name: KAFKA_SECURITY
+              value: "SASL_PLAINTEXT"
+            - name: VAULT_API_URL
+              value: "https://xxx.api.vault.kerberos.live"
+            - name: VAULT_ACCESS_KEY
+              value: "xxx"
+            - name: VAULT_SECRET_KEY
+              value: "xxx"
+            - name: FORWARDING_MEDIA
+              value: "false"
+            - name: FORWARDING_METADATA
+              value: "false"
+            - name: FORWARDING_OBJECT_THRESHOLD
+              value: "10"
+            - name: REMOVE_AFTER_PROCESSED
+              value: "false"
