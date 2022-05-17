@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: kerberoshub-ml
-          image: kerberos/hub-ml:nvidia # or CPU -> kerberos/hub-ml:amd64
+          image: kerberos/hub-ml:nvidia-1.0.483005994 # or CPU -> kerberos/hub-ml:amd64
           resources:
             limits:
               nvidia.com/gpu: 1 # requesting a single GPU
@@ -55,3 +55,5 @@ spec:
               value: "10"
             - name: REMOVE_AFTER_PROCESSED
               value: "false"
+            - name: NUMBER_OF_PREDICTIONS
+              value: "10"
