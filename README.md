@@ -37,7 +37,7 @@ So to conclude: the only thing you need to do in order to scale is to add more G
 As shown in the above architecture, this project has a couple of prerequisites.
 
 1. Make sure you have some camera streams,
-2. have set up [a Kerberos Enterprise installation](https://doc.kerberos.io/enterprise/installation/) which is processing camera streams,
+2. have set up [a Kerberos Factory installation](https://doc.kerberos.io/factory/installation/) which is processing camera streams,
 3. have set up [a Kerberos Vault installation](https://doc.kerberos.io/vault/installation/) which is able to store recordings in a provider,
 4. have a Kafka installation, and [connected through an integration](https://doc.kerberos.io/vault/get-started/#queues) in Kerberos Vault
 5. and if running on GPUs have the required NVIDIA drivers and operator (when on Kubernetes) installed.
