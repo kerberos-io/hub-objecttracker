@@ -18,13 +18,13 @@ spec:
         - name: regcred
       containers:
         - name: kerberoshub-ml
-          image: kerberos/hub-ml:nvidia-1.0.669174682 # or CPU -> kerberos/hub-ml:amd64
+          image: kerberos/hub-ml:nvidia-1.0.817934754 # or CPU -> kerberos/hub-ml:amd64
           resources:
             limits:
               nvidia.com/gpu: 1 # requesting a single GPU
           env:
             - name: QUEUE_SYSTEM
-              value: "KAFKA"
+              value: "KAFKA" # or "RABBITMQ"
             - name: QUEUE_NAME
               value: "kcloud-classify-queue.fifo" # This is the topic of kafka we will read messages from.
             - name: QUEUE_TARGET
@@ -41,6 +41,14 @@ spec:
               value: "PLAIN"
             - name: KAFKA_SECURITY
               value: "SASL_PLAINTEXT"
+            - name: RABBITMQ_HOST
+              value: "yourip.xxx:5672"
+            - name: RABBITMQ_EXCHANGE
+              value: ""
+            - name: RABBITMQ_USERNAME
+              value: "yourusername"
+            - name: RABBITMQ_PASSWORD
+              value: "yourpassword"
             - name: VAULT_API_URL
               value: "https://xxx.api.vault.kerberos.live"
             - name: VAULT_ACCESS_KEY
