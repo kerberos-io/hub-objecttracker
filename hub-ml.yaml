@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: kerberoshub-ml
-          image: kerberos/hub-ml:nvidia-1.0.818302810 # or CPU -> kerberos/hub-ml:amd64
+          image: kerberos/hub-ml:nvidia-1.0.818672268 # or CPU -> kerberos/hub-ml:amd64
           resources:
             limits:
               nvidia.com/gpu: 1 # requesting a single GPU
