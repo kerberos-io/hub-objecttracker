@@ -1,6 +1,6 @@
-# Kerberos Vault and Kerberos Hub with Machine learning 
+# Kerberos Vault and Kerberos Hub with Machine learning
 
-This is an example repository which shows the inference of a machine learning model (YOLOv3) by developing a Kerberos Vault or Kerberos Hub integration. The repository receives events from Kerberos Vault or the Kerberos Hub pipeline, through a Kafka or Kerberos Hub integration, and downloads, runs an interference on  therecordings stored in Kerberos Vault using the existing and open source YOLOv3 ML model. This repository contains an example `hub-ml.yaml` file to illustrate how to run the project works in your Kubernetes cluster [using the NVIDIA operator](https://github.com/kerberos-io/nvidia-gpu-kubernetes).
+This is an example repository which shows the inference of a machine learning model (YOLOv3) by developing a Kerberos Vault or Kerberos Hub integration. The repository receives events from Kerberos Vault or the Kerberos Hub pipeline, through a Kafka or Kerberos Hub integration, and downloads, runs an interference on therecordings stored in Kerberos Vault using the existing and open source YOLOv3 ML model. This repository contains an example `hub-ml.yaml` file to illustrate how to run the project works in your Kubernetes cluster [using the NVIDIA operator](https://github.com/kerberos-io/nvidia-gpu-kubernetes).
 
 ![NVIDIA operator Kerberos Vault](https://user-images.githubusercontent.com/1546779/132137679-33fc02df-085f-47cf-8587-301bd3448e63.png)
 
@@ -18,7 +18,7 @@ An example of a business process could be the execution of a machine learning mo
 
 As shown above, Kerberos Agents will take care of the scaling and stability of your IP cameras; it will make sure it is recording at all times (according to your configurations). Once recorded by a Kerberos Agent, the recording(s) will be stored in a storage provider (S3, Minio, etc) by Kerberos Vault.
 
-Once stored, Kerberos Vault can execute multiple integrations such as Kafka messaging. As soon as a message hits the message broker (e.g. Kafka), the process is totally your. Hence, what you will learn next is a practical example of how that integration with custom code looks like. 
+Once stored, Kerberos Vault can execute multiple integrations such as Kafka messaging. As soon as a message hits the message broker (e.g. Kafka), the process is totally your. Hence, what you will learn next is a practical example of how that integration with custom code looks like.
 
 ## Kerberos Hub
 
@@ -42,7 +42,7 @@ As shown in the above architecture, this project has a couple of prerequisites.
 4. have a Kafka installation, and [connected through an integration](https://doc.kerberos.io/vault/get-started/#queues) in Kerberos Vault
 5. and if running on GPUs have the required NVIDIA drivers and operator (when on Kubernetes) installed.
 
-### Installation and Environment variables   
+### Installation and Environment variables
 
 Inside the project we are making extensive use of environment variables. Those environment variables will inject the appropriate settings into the source code, and will make sure the project connects to your Kafka broker and Kerberos Vault installation.
 
@@ -66,6 +66,7 @@ Environment variables can be passed into your `docker run` command.
     -e FORWARDING_METADATA="false" \
     -e FORWARDING_OBJECT_THRESHOLD="1" \
     -e REMOVE_AFTER_PROCESSED="false" \
+    -e MOVE_DISTANCE="100" \
     kerberos/vault-ml:nvidia
 
 Or with the Kerberos Hub pipeline.
@@ -84,6 +85,7 @@ Or with the Kerberos Hub pipeline.
     -e FORWARDING_METADATA="false" \
     -e FORWARDING_OBJECT_THRESHOLD="1" \
     -e REMOVE_AFTER_PROCESSED="false" \
+    -e MOVE_DISTANCE="100" \
     kerberos/hub-ml:nvidia
 
 Or if you want to deploy into Kubernetes you can use the `hub-ml.yaml` file and specify the environment variables inside the environments section.
@@ -111,6 +113,8 @@ The following variables can be used, and should be aligned with your Kafka broke
 | FORWARDING_METADATA         | "true"                   | If the object threshold is reach, forward the metadata to Kerberos Hub.         |
 | FORWARDING_OBJECT_THRESHOLD | 3                        | The number of frames it will process in a single video.                         |
 | REMOVE_AFTER_PROCESSED      | "false"                  | Remove the recording from Kerberos Vault after it was processed.                |
+| REMOVE_AFTER_PROCESSED      | "false"                  | Remove the recording from Kerberos Vault after it was processed.                |
+| MOVE_DISTANCE               | "50"                     | The minimum distance an object should have travelled before it's of interest.   |
 
 ## What to expect
 
@@ -133,7 +137,7 @@ At the start you should see the following.
     11 res    8                 152 x 152 x 128   ->   152 x 152 x 128
 
 After running for some time you should see messages being consumed from your Kafka broker, and some results of the inferences.
-    
+
     checking..
     {'provider': 'kstorage', 'source': 'storj', 'request': 'persist', 'payload': {'is_fragmented': False, 'metadata': {'productid': 'Bfuk14xm40eMSxwEEyrd908yzmDIwKp5', 'event-timestamp': '1630567591', 'publickey': 'ABCDEFGHI!@#$%12345', 'event-instancename': 'highway4', 'capture': 'IPCamera', 'event-microseconds': '0', 'uploadtime': '1630567591', 'event-regioncoordinates': '200-200-400-400', 'event-token': '0', 'event-numberofchanges': '24'}, 'key': 'youruser/1630567591_6-967003_highway4_200-200-400-400_24_769.mp4', 'bytes_range_on_time': None, 'fileSize': 6189104, 'bytes_ranges': ''}, 'events': ['monitor', 'sequence', 'analysis', 'throttler', 'notification'], 'date': 1630567591}
     {"provider": "kstorage", "data": {"probabilities": [[0.930047333240509, 0.8236896991729736]], "labels": [["car", "car"]], "boxes": [[[542, 308, 595, 336], [568, 287, 605, 304]]]}, "source": "storj", "request": "persist", "payload": {"is_fragmented": false, "metadata": {"productid": "Bfuk14xm40eMSxwEEyrd908yzmDIwKp5", "event-timestamp": "1630567591", "publickey": "ABCDEFGHI!@#$%12345", "event-instancename": "highway4", "capture": "IPCamera", "event-microseconds": "0", "uploadtime": "1630567591", "event-regioncoordinates": "200-200-400-400", "event-token": "0", "event-numberofchanges": "24"}, "key": "youruser/1630567591_6-967003_highway4_200-200-400-400_24_769.mp4", "bytes_range_on_time": null, "fileSize": 6189104, "bytes_ranges": ""}, "events": ["monitor", "sequence", "analysis", "throttler", "notification"], "date": 1630567591, "operation": "classification"}
