@@ -1,6 +1,6 @@
 # Kerberos Vault and Kerberos Hub with Machine learning
 
-> This project is archived, and move to the new organisation and repository: [hub-pipeline-classifier](https://github.com/uug-ai/hub-pipeline-classifier)
+> This project is archived, and move to the new organisation and repository: [uug-ai/hub-pipeline-classifier](https://github.com/uug-ai/hub-pipeline-classifier)
 
 This is an example repository which shows the inference of a machine learning model (YOLOv3) by developing a Kerberos Vault or Kerberos Hub integration. The repository receives events from Kerberos Vault or the Kerberos Hub pipeline, through a Kafka or Kerberos Hub integration, and downloads, runs an interference on therecordings stored in Kerberos Vault using the existing and open source YOLOv3 ML model. This repository contains an example `hub-ml.yaml` file to illustrate how to run the project works in your Kubernetes cluster [using the NVIDIA operator](https://github.com/kerberos-io/nvidia-gpu-kubernetes).
 
